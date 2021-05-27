@@ -1,4 +1,4 @@
-# Hough Lines
+# Hough lines
 
 Hough transform is a feature extraction technique used in image processing. The technique can be used to detect shapes in images, e.g., lines and circles.
 
