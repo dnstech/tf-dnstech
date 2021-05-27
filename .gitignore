@@ -74,8 +74,11 @@ docs/_build/
 # PyBuilder
 target/
 
-# Jupyter Notebook
+# Jupyter Notebook checkpoints
 .ipynb_checkpoints
+
+# PyCharm
+.idea
 
 # IPython
 profile_default/
