@@ -2,6 +2,13 @@
 
 Hough transform is a feature extraction technique used in image processing. The technique can be used to detect shapes in images, e.g., lines and circles.
 
+## References
+
+This module was built using the following resources as reference materials:
+
+1. [Moonlight Optical Music Recognition](https://github.com/tensorflow/moonlight/blob/master/moonlight/vision/hough.py)
+2. [Wikipedia](https://en.wikipedia.org/wiki/Hough_transform)
+
 ## Usage
 
 ```python
@@ -26,7 +33,7 @@ rhos, thetas = hough.HoughLines(thetas, threshold)(tf.convert_to_tensor(edges, d
 
 ## Results
 
-### Visual
+### Image
 
 ![sudoku_lines](sudoku_lines.png)
 
@@ -39,15 +46,12 @@ GPU: GeForce RTX 2080 Ti
 TensorFlow: 2.4.1
 Python: 3.8.10
 ```
+The python packages and their versions used during the development of this module can be found in `requirements.txt`.
+
 #### Results
 
-```python
-OpenCV: 4.7267 seconds for 1000 reps of sudoku.png
-Tensorflow: 9.0237 seconds for 1000 reps of sudoku.png
 ```
-
-## References
-
-1. [Moonlight Optical Music Recognition](https://github.com/tensorflow/moonlight/blob/master/moonlight/vision/hough.py)
-2. [Wikipedia](https://en.wikipedia.org/wiki/Hough_transform)
+OpenCV: 4.7812 seconds for 1000 reps of sudoku.png
+Tensorflow: 7.7971 seconds for 1000 reps of sudoku.png
+```
 
