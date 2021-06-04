@@ -19,19 +19,16 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-"""Hough transform for line detection."""
+"""Hough transform for line detection.
+
+Note on optimising TensorFlow GPU performance:
+ 1. https://www.tensorflow.org/guide/gpu_performance_analysis
+ 2. https://github.com/NVIDIA/DeepLearningExamples/issues/57
+"""
 
 import tensorflow as tf
 import os
 
-# Optimize TensorFlow GPU Performance with the TensorFlow Profiler:
-# https://www.tensorflow.org/guide/gpu_performance_analysis
-#
-# TF_GPU_THREAD_MODE: Whether and how the GPU device uses its own threadpool. Possible values:
-#   global: GPU uses threads shared with CPU in the main compute thread-pool. This is currently the default.
-#   gpu_private: GPU uses threads dedicated to this device.
-#   gpu_shared: All GPUs share a dedicated thread pool.
-#
 os.environ['TF_GPU_THREAD_MODE'] = 'gpu_private'
 
 
