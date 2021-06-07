@@ -38,7 +38,7 @@ class ConnectedComponents:
     """Connected component labelling.
 
     Identifies 8-way connectivity in 2D boolean images using tensorflow addons' connected components operation, which
-    identifies 4-way connectivity (neighbors above,below, left, and right)
+    identifies 4-way connectivity (neighbors above, below, left, and right)
     """
 
     def __init__(self):
