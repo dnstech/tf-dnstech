@@ -1,4 +1,4 @@
-# Hough lines
+# Canny edge
 
 Hough transform is a feature extraction technique used in image processing. The technique can be used to detect shapes in images, e.g., lines and circles.
 
@@ -18,24 +18,36 @@ import tensorflow as tf
 
 import canny
 
-# get the image and perform edge detection
-img = cv2.imread('sudoku.png')
-gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-edges = cv2.Canny(gray, 100, 200, L2gradient=True)
+# get the image
+img = cv2.imread('sudoku.png' , cv2.IMREAD_GRAYSCALE)
+img_tf = tf.expand_dims(tf.convert_to_tensor(img, dtype=tf.float32), axis=0)
 
+# Mode 1: Manual threshold
+# ---------------------------
 # attributes
-thetas = tf.range(start=0, limit=180, delta=1, dtype=tf.float32) / 180.0 * np.pi
-threshold = tf.constant(200, dtype=tf.int32)
+weak_threshold = tf.constant(100, dtype=tf.float32)
+strong_threshold = tf.constant(200, dtype=tf.float32)
 
-# get Hough lines
-rhos, thetas = canny.HoughLines(thetas, threshold)(tf.convert_to_tensor(edges, dtype=tf.bool))
+# get Canny edge
+canny_manual = canny.CannyEdge(
+    weak_threshold=weak_threshold, 
+    strong_threshold=strong_threshold
+)
+edges_tf_manual = canny_manual(img_tf)
+
+
+# Mode 2: Automatic threshold
+# ---------------------------
+# get Canny edge
+canny_auto = canny.CannyEdge()
+edges_tf_auto = canny_auto(img_tf)
 ```
 
 ## Results
 
 ### Image
 
-![sudoku_lines](sudoku_lines.png)
+![sudoku_edges](sudoku_edges.png)
 
 ### Time
 
@@ -51,7 +63,8 @@ The python packages and their versions used during the development of this modul
 #### Results
 
 ```
-OpenCV: 4.7812 seconds for 1000 reps of sudoku.png
-Tensorflow: 7.7971 seconds for 1000 reps of sudoku.png
+OpenCV: 0.0304 seconds for 100 reps of sudoku.png
+Tensorflow (Manual Thresholding): 0.9486 seconds for a batch of 100 sudoku.png
+Tensorflow (Auto Thresholding): 0.9317 seconds for a batch of 100 sudoku.png
 ```
 
