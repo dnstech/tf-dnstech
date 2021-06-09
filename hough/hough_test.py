@@ -24,7 +24,7 @@
 import tensorflow as tf
 import numpy as np
 
-from hough import HoughLines
+from hough.hough import HoughLines
 
 
 class HoughTest(tf.test.TestCase):

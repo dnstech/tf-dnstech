@@ -25,14 +25,14 @@ Note on optimising TensorFlow GPU performance:
  1. https://www.tensorflow.org/guide/gpu_performance_analysis
  2. https://github.com/NVIDIA/DeepLearningExamples/issues/57
 """
-
 import tensorflow as tf
 import tensorflow_probability as tfp
 import numpy as np
 import os
+import sys
 
-from connected_components import ConnectedComponents
-
+sys.path.append("../components/")
+import connected_components
 
 os.environ['TF_GPU_THREAD_MODE'] = 'gpu_private'
 
@@ -40,19 +40,24 @@ os.environ['TF_GPU_THREAD_MODE'] = 'gpu_private'
 class CannyEdge:
     """Canny edge detector.
 
-    <description here>
+    Extracts edges from grayscale images employing a set of algorithms. The Process of Canny edge detection algorithm
+    can be broken down to 5 different steps:
+     1. Apply Gaussian filter to smooth the image in order to remove the noise.
+     2. Find the intensity gradients of the image.
+     3. Apply gradient magnitude thresholding or lower bound cut-off suppression to get rid of spurious response to
+     edge detection.
+     4. Apply double threshold to determine potential edges.
+     5. Track edge by hysteresis: Finalize the detection of edges by suppressing all the other edges that are weak and
+     not connected to strong edges.
     """
 
     def __init__(self, weak_threshold=None, strong_threshold=None):
-        """Initialise class attributes
+        """Initialise class attributes.
 
         Args:
+            weak_threshold: first threshold for the hysteresis procedure.
+            strong_threshold: second threshold for the hysteresis procedure.
         """
-        if (weak_threshold is not None) and (not tf.is_tensor(weak_threshold)):
-            raise TypeError("weak_threshold must be a tensor")
-        if (strong_threshold is not None) and (not tf.is_tensor(strong_threshold)):
-            raise TypeError("strong_threshold must be a tensor")
-
         self.weak_threshold = tf.constant(weak_threshold, dtype=tf.float32) if weak_threshold is not None else None
         self.strong_threshold = tf.constant(strong_threshold, dtype=tf.float32) if weak_threshold is not None else None
         self.pi = tf.constant(np.pi, dtype=tf.float32)
@@ -77,16 +82,17 @@ class CannyEdge:
         self.canny_weak = tf.constant(0.67, dtype=tf.float32)
 
         # connected components
-        self.connected_components = ConnectedComponents()
+        self.connected_components = connected_components.ConnectedComponents()
 
     @tf.function(input_signature=[tf.TensorSpec(shape=[None, None, None], dtype=tf.float32)])
     def __call__(self, images):
-        """Finds hough lines on the image
+        """Finds edges on the images employing Canny edge detection algorithm.
 
         Args:
-            image: 2D tensor (float32). Should be grayscale image.
+            images: 3D tensor NHW (float32). Should be grayscale images.
 
         Returns:
+            canny_edges: 3D tensor NHW (bool). Edges from Canny edge detection algorithm.
         """
         # get dimension of the images
         dims = tf.shape(images)
@@ -159,16 +165,26 @@ class CannyEdge:
         segment_ids = tf.where(tf.math.less(segment_ids, 0), 0, segment_ids)
 
         # get the final edges from the connected segments and strong edges
-        final_edges = tf.map_fn(
-            lambda xx: _final_edge(xx[0], xx[1], dims[1:]),
+        canny_edges = tf.map_fn(
+            lambda xx: _hysteresis(xx[0], xx[1], dims[1:]),
             (segment_ids, strong_edges),
             fn_output_signature=tf.bool
         )
 
-        return final_edges
+        return canny_edges
 
 
-def _final_edge(segment_ids, strong_edges, dim):
+def _hysteresis(segment_ids, strong_edges, dim):
+    """Finds final edges by hysteresis.
+
+    Args:
+        segment_ids: 2D tensor HW (int32). Segment ids of weak edges from connected component algorithm.
+        strong_edges: 2D tensor HW (bool). Strong edges.
+        dim: 1D tensor (int32). Dimension HW of images.
+
+    Returns:
+        edges: 2D tensor HW (bool). Final edges from hysteresis.
+    """
     strong_edges = tf.cast(strong_edges, tf.int32)
     num_segments = tf.reduce_max(segment_ids) + 1
 
@@ -183,6 +199,6 @@ def _final_edge(segment_ids, strong_edges, dim):
     idx_corrected = tf.gather(tf.argsort(tf.argsort(y)), idx)
 
     # get the boolean mask
-    edge = tf.reshape(tf.gather(mask_strong, idx_corrected), shape=dim)
+    edges = tf.reshape(tf.gather(mask_strong, idx_corrected), shape=dim)
 
-    return edge
+    return edges

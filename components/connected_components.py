@@ -38,7 +38,7 @@ class ConnectedComponents:
     """Connected component labelling.
 
     Identifies 8-way connectivity in 2D boolean images using tensorflow addons' connected components operation, which
-    identifies 4-way connectivity (neighbors above, below, left, and right)
+    identifies 4-way connectivity (neighbors above, below, left, and right).
     """
 
     def __init__(self):
@@ -52,7 +52,7 @@ class ConnectedComponents:
 
     @tf.function(input_signature=[tf.TensorSpec(shape=[None, None, None], dtype=tf.bool)])
     def __call__(self, images):
-        """Returns the connected component ids
+        """Returns the connected component ids.
 
         Args:
             images: 3D (N, H, W) boolean tensor of images (bool).
