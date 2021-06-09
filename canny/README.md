@@ -1,18 +1,17 @@
 # Canny edge
 
 An edge detection operation employing a set of algorithms introduced by John F. Canny. The steps to perform this operation are as follows:
-        1. Apply Gaussian filter to smooth the image in order to remove the noise.
-        2. Find the intensity gradients of the image.
-        3. Apply gradient magnitude thresholding or lower bound cut-off suppression to get rid of spurious response to edge detection.
-        4. Apply double threshold to determine potential edges.
-        5. Track edge by hysteresis: Finalise the detection of edges by suppressing all the other edges that are weak and not connected to strong edges.
+1. Apply Gaussian filter to smooth the image in order to remove the noise.
+2. Find the intensity gradients of the image.
+3. Apply gradient magnitude thresholding or lower bound cut-off suppression to get rid of spurious response to edge detection.
+4. Apply double threshold to determine potential edges.
+5. Track edge by hysteresis: Finalise the detection of edges by suppressing all the other edges that are weak and not connected to strong edges.
 
 ***NOTE: Step 1 is omitted in order to be consistent with [OpenCV](https://github.com/opencv/opencv/blob/master/modules/imgproc/src/canny.cpp)'s implementation of the algorithm.*** 
 
 ## References
 
 This module was built using the following resources as reference materials:
-
 1. [Quang-Khai Tran's implementation](https://github.com/tqkhai2705/edge-detection)
 2. [Wikipedia](https://en.wikipedia.org/wiki/Canny_edge_detector)
 3. [Medium](https://towardsdatascience.com/canny-edge-detection-step-by-step-in-python-computer-vision-b49c3a2d8123)
