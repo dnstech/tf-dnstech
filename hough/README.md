@@ -46,7 +46,7 @@ GPU: GeForce RTX 2080 Ti
 TensorFlow: 2.4.1
 Python: 3.8.10
 ```
-The python packages and their versions used during the development of this module can be found in `requirements.txt`.
+The python packages and their versions used during the development of this module can be found in [`requirements.txt`](requirements.txt).
 
 #### Results
 

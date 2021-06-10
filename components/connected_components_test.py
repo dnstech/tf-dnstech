@@ -19,40 +19,42 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-"""Test for Hough lines."""
+"""Test for connected components."""
 
 import tensorflow as tf
 import numpy as np
 
-from hough.hough import HoughLines
+from connected_components import ConnectedComponents
 
 
-class HoughTest(tf.test.TestCase):
-    def test_lines(self):
-        """Tests for Hough lines.
+class ConnectedComponentsTest(tf.test.TestCase):
+    def test_connected_components(self):
+        """Test for connected components.
 
         Inputs:
-            image: [[0, 0, 0, 0, 1],
-                    [0, 0, 0, 1, 0],
-                    [0, 0, 1, 0, 0],
-                    [0, 1, 0, 0, 0],
-                    [1, 0, 0, 0, 0]]
-            thetas: [0,  45,  90,  135]
-            threshold: 3
+            image: [[True, False, True, False, True],
+                    [False, True, True, True, False],
+                    [False, False, True, False, False],
+                    [False, True, True, True, False],
+                    [True, False, True, False, True]]
 
         Outputs:
-            rhos: [3]
-            thetas: [45]
+            segment_ids: [[1, 0, 1, 0, 1],
+                          [0, 1, 1, 1, 0],
+                          [0, 0, 1, 0, 0],
+                          [0, 1, 1, 1, 0],
+                          [1, 0, 1, 0, 1]]
         """
-        image = tf.squeeze(tf.image.flip_left_right(tf.eye(5, dtype=tf.bool)[:, :, None]))
-        thetas = tf.range(start=0, limit=180, delta=45, dtype=tf.float32) / 180.0 * np.pi
-        threshold = tf.constant(2, dtype=tf.int32)
+        img = np.eye(5)
+        img = np.fliplr(img) + img
+        img[:, 2] = 1.0
 
-        hough_lines = HoughLines(thetas, threshold)
-        rhos, thetas = hough_lines(image)
+        image = tf.convert_to_tensor(img[None, :], dtype=tf.bool)
 
-        self.assertAllEqual(rhos, tf.constant([3], dtype=tf.int32))
-        self.assertAllEqual(thetas, tf.constant([0.7853982], dtype=tf.float32))
+        connected_components = ConnectedComponents()
+        segment_ids = connected_components(image)
+
+        self.assertAllEqual(segment_ids, tf.convert_to_tensor(img[None, :], dtype=tf.int32))
 
 
 if __name__ == '__main__':

@@ -58,7 +58,7 @@ class HoughLines:
 
     @tf.function(input_signature=[tf.TensorSpec(shape=[None, None], dtype=tf.bool)])
     def __call__(self, image):
-        """Finds hough lines on the image
+        """Finds hough lines on the image.
 
         Args:
             image: 2D boolean tensor (bool). Should be sparse (mostly false), normally the output from an edge detection
@@ -96,7 +96,7 @@ class HoughLines:
         return hough_rhos, hough_thetas
 
     def _bincount_2d(self, rhos):
-        """2D bincount using 1D bincount function
+        """2D bincount using 1D bincount function.
 
         Args:
             rhos: The rho values (float32). 2D tensor for all positives in image across all possible thetas.
@@ -129,7 +129,7 @@ class HoughLines:
         return rhos, bins
 
     def _rhos(self, image):
-        """Gets rho values based on rho = x cos theta + y sin theta
+        """Gets rho values based on rho = x cos theta + y sin theta.
 
         Args:
             image: 2D boolean tensor (bool). Should be sparse (mostly false), normally the output from an edge detection
