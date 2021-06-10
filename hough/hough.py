@@ -19,17 +19,8 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-"""Hough transform for line detection.
-
-Note on optimising TensorFlow GPU performance:
- 1. https://www.tensorflow.org/guide/gpu_performance_analysis
- 2. https://github.com/NVIDIA/DeepLearningExamples/issues/57
-"""
-
+"""Hough transform for line detection."""
 import tensorflow as tf
-import os
-
-os.environ['TF_GPU_THREAD_MODE'] = 'gpu_private'
 
 
 class HoughLines:

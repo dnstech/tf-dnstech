@@ -19,22 +19,14 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-"""Canny edge detection.
-
-Note on optimising TensorFlow GPU performance:
- 1. https://www.tensorflow.org/guide/gpu_performance_analysis
- 2. https://github.com/NVIDIA/DeepLearningExamples/issues/57
-"""
+"""Canny edge detection."""
 import tensorflow as tf
 import tensorflow_probability as tfp
 import numpy as np
-import os
 import sys
 
 sys.path.append("../components/")
 import connected_components
-
-os.environ['TF_GPU_THREAD_MODE'] = 'gpu_private'
 
 
 class CannyEdge:
