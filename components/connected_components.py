@@ -53,11 +53,8 @@ class ConnectedComponents:
             value 0, and all other entries map to a component id > 0.
         """
         # apply filter and get pixel positions that should be augmented
-        conv = tf.where(
-            tf.math.equal(
+        conv = tf.math.equal(
                 tf.nn.convolution(tf.cast(tf.expand_dims(images, axis=-1), tf.int32), self.kernel, padding='SAME'), 2
-            ),
-            True, False
         )
 
         # augment original image
